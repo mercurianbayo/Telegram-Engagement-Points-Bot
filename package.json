@@ -1,0 +1,19 @@
+{
+  "name": "telegram-engage-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^12.4.1",
+    "dotenv": "^17.2.3",
+    "node-cron": "^4.2.1",
+    "node-telegram-bot-api": "^0.66.0",
+    "openai": "^6.6.0"
+  }
+}
