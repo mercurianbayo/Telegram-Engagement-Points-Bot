@@ -6,11 +6,37 @@ const cron = require('node-cron');
 const OpenAI = require('openai');
 
 // --- Init Bot + Database ---
-const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
+// --- Init Bot in WEBHOOK MODE ---
+const express = require("express");
+const app = express();
+app.use(express.json());
+
+// Database & AI init (same as before)
 const db = new Database("engagebot.db");
 const ai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-console.log("🤖 Engage Bot running...");
+// Initialize bot with webhook
+const bot = new TelegramBot(process.env.BOT_TOKEN, { webHook: true });
+
+const webhookURL = process.env.WEBHOOK_URL + "/webhook/" + process.env.BOT_TOKEN;
+
+// Register webhook with Telegram
+bot.setWebHook(webhookURL);
+
+console.log("🚀 Webhook registered at:", webhookURL);
+
+// Express endpoint for Telegram
+app.post(`/webhook/${process.env.BOT_TOKEN}`, (req, res) => {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
+});
+
+console.log("🤖 Engage Bot running (Webhook Mode)…");
+
+// Start express server
+app.listen(3000, () => {
+    console.log("🌐 Server running on port 3000");
+});
 
 // --- Create tables if not exist ---
 db.prepare(`
